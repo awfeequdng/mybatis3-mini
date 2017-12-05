@@ -1,4 +1,4 @@
-package com.ly.zmn48644.session.mapper;
+package com.ly.zmn48644.mapper;
 
 public interface UserMapper {
 
