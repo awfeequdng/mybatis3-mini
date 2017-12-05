@@ -1,7 +1,5 @@
 package com.ly.zmn48644.binding;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
-
 /**
  * 接口中的一个方法也就是,一个Method对象对应一个MapperMethod
  * 当调用接口中的方法时,通过动态代理调用 MapperMethod 的 execute 方法.

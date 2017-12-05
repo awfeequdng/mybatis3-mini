@@ -6,13 +6,14 @@ import com.ly.zmn48644.session.SqlSession;
 import com.ly.zmn48644.session.SqlSessionFactory;
 import com.ly.zmn48644.session.SqlSessionFactoryBuilder;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 public class SqlSessionTest {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        InputStream inputStream = Resources.getResourcesAsStream("mybatis-config.xml");
+        InputStream inputStream = Resources.getResourceAsStream("mybatis-config.xml");
 
         SqlSessionFactory sqlSessionFactory = SqlSessionFactoryBuilder.build(inputStream);
 

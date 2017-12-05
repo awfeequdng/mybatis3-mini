@@ -1,6 +1,7 @@
 package com.ly.zmn48644.session;
 
-import com.ly.zmn48644.build.xml.XMLConfigBuilder;
+
+import com.ly.zmn48644.build.XMLConfigBuilder;
 import com.ly.zmn48644.session.defaults.DefaultSqlSessionFactory;
 
 import java.io.InputStream;

@@ -1,6 +1,10 @@
 package com.ly.zmn48644.session;
 
 import com.ly.zmn48644.binding.MapperRegistry;
+import com.ly.zmn48644.mapping.MappedStatement;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 全局配置中心
@@ -8,6 +12,7 @@ import com.ly.zmn48644.binding.MapperRegistry;
 public class Configuration {
 
     private MapperRegistry mapperRegistry = new MapperRegistry();
+    protected final Map<String, MappedStatement> mappedStatements = new HashMap<>();
 
     public <T> void addMapper(Class<T> type) {
         mapperRegistry.addMapper(type);
@@ -16,4 +21,24 @@ public class Configuration {
     public <T> T getMapper(Class<T> type) {
         return mapperRegistry.getMapper(type);
     }
+
+    /**
+     * 向mappedStatements中添加解析到的 MappedStatement
+     *
+     * @param ms
+     */
+    public void addMappedStatement(MappedStatement ms) {
+        mappedStatements.put(ms.getId(), ms);
+    }
+
+    /**
+     * 根据Id获取MappedStatement
+     *
+     * @param id
+     * @return
+     */
+    public MappedStatement getMappedStatement(String id) {
+        return mappedStatements.get(id);
+    }
+
 }
