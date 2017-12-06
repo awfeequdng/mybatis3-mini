@@ -3,8 +3,15 @@ package com.ly.zmn48644.mapping;
 public class MappedStatement {
     private String id;
     private SqlSource sqlSource;
+    private SqlCommandType sqlCommandType;
 
+    public SqlCommandType getSqlCommandType() {
+        return sqlCommandType;
+    }
 
+    public void setSqlCommandType(SqlCommandType sqlCommandType) {
+        this.sqlCommandType = sqlCommandType;
+    }
 
     public String getId() {
         return id;

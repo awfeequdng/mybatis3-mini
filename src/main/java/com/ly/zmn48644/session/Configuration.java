@@ -18,8 +18,8 @@ public class Configuration {
         mapperRegistry.addMapper(type);
     }
 
-    public <T> T getMapper(Class<T> type) {
-        return mapperRegistry.getMapper(type);
+    public <T> T getMapper(Class<T> type,SqlSession sqlSession) {
+        return mapperRegistry.getMapper(type,sqlSession);
     }
 
     /**

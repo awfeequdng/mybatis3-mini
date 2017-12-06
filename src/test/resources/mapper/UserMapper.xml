@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<mapper>
+<mapper namespace="com.ly.zmn48644.mapper.UserMapper">
     <select id="getUserCount">
-            select count(*) from t_user
+        select count(*) from t_user
     </select>
 </mapper>
 
