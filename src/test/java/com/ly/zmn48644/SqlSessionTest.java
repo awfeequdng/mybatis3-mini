@@ -21,7 +21,7 @@ public class SqlSessionTest {
 
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
 
-        System.out.println(mapper.getUserCountByName("zmn"));
+        System.out.println(mapper.getUserCount());
 
 
     }
