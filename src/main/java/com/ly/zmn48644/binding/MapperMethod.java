@@ -22,7 +22,15 @@ public class MapperMethod {
         //在这里调用SqlSession中相对应的方法比如update,delete,select等方法.
         switch (sqlCommand.getType()) {
             case SELECT: {
+                //接口方法返回void
+
+                //接口方法返回集合或者数组
+
+                //接口方法返回map
+
+                //接口返回单个对象
                 sqlSession.selectList(sqlCommand.getName());
+
                 break;
             }
             case UPDATE: {
