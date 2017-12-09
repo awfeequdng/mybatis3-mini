@@ -3,6 +3,7 @@
     <select id="getUserCount">
         select count(*) from t_user
     </select>
+
 </mapper>
 
 
