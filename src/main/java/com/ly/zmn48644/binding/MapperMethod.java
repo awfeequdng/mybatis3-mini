@@ -11,43 +11,56 @@ import java.lang.reflect.Method;
  */
 public class MapperMethod {
     private final SqlCommand sqlCommand;
+    //定义一个类封装 方法返回值数据,在execute方法执行select语句的时候判断
+    private MethodSignature method;
+
 
     public MapperMethod(Configuration configuration, Class<?> mapperInterface, Method method) {
         //这里初始化当前对象的 SqlCommand 属性
         this.sqlCommand = new SqlCommand(configuration, mapperInterface, method);
+        this.method = new MethodSignature(mapperInterface, method);
     }
 
     public Object execute(SqlSession sqlSession) {
 
+        Object result;
         //在这里调用SqlSession中相对应的方法比如update,delete,select等方法.
         switch (sqlCommand.getType()) {
             case SELECT: {
-                //接口方法返回void
-
-                //接口方法返回集合或者数组
-
-                //接口方法返回map
-
-                //接口返回单个对象
-                sqlSession.selectList(sqlCommand.getName());
-
+                if (method.isReturnsVoid()) {
+                    //接口方法返回void
+                    result = null;
+                } else if (method.isReturnsMany()) {
+                    //接口方法返回集合或者数组
+                    result = executeForMany(sqlSession);
+                } else {
+                    //返回单个元素情况下
+                    result = sqlSession.selectOne(sqlCommand.getName());
+                }
                 break;
             }
             case UPDATE: {
+                result = null;
                 System.out.println("执行更新操作!");
                 break;
             }
             case DELETE: {
+                result = null;
                 System.out.println("执行删除操作");
                 break;
             }
             case INSERT: {
+                result = null;
                 System.out.println("执行插入操作");
             }
             default:
                 throw new RuntimeException();
         }
 
-        return Integer.valueOf(1);
+        return result;
+    }
+
+    private Object executeForMany(SqlSession sqlSession) {
+        return null;
     }
 }

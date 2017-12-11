@@ -6,6 +6,7 @@ import com.ly.zmn48644.session.SqlSession;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * SqlSession的默认实现类
@@ -18,6 +19,16 @@ public class DefaultSqlSession implements SqlSession {
         this.configuration = configuration;
     }
 
+
+    @Override
+    public <T> T selectOne(String statement) {
+        return null;
+    }
+
+    @Override
+    public <K, V> Map<K, V> selectMap(String statement, String mapKey) {
+        return null;
+    }
 
     @Override
     public <E> List<E> selectList(String statement) {
