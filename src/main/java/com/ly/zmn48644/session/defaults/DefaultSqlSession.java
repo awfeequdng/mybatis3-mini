@@ -22,6 +22,8 @@ public class DefaultSqlSession implements SqlSession {
 
     @Override
     public <T> T selectOne(String statement) {
+        //调用 selectList 方法
+
         return null;
     }
 
@@ -32,15 +34,17 @@ public class DefaultSqlSession implements SqlSession {
 
     @Override
     public <E> List<E> selectList(String statement) {
+
         MappedStatement ms = configuration.getMappedStatement(statement);
-        System.out.println("正在执行查询语句:" + ms.getSqlSource().getBoundSql(null).getSql());
+        //调用执行器完成查询操作
+
         return new ArrayList<>();
     }
 
     //这里返回的是指定接口的代理对象
     @Override
     public <T> T getMapper(Class<T> type) {
-        return configuration.getMapper(type,this);
+        return configuration.getMapper(type, this);
     }
 
     @Override
