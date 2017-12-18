@@ -15,8 +15,8 @@ public class SimpleStatementHandler extends BaseStatementHandler {
     }
 
     @Override
-    protected Statement instantiateStatement(Connection connection) {
-        return null;
+    protected Statement instantiateStatement(Connection connection) throws SQLException {
+        return connection.createStatement();
     }
 
     @Override

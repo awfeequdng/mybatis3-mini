@@ -18,7 +18,7 @@ public interface StatementHandler {
      * @param transactionTimeout
      * @return
      */
-    Statement prepare(Connection connection, Integer transactionTimeout);
+    Statement prepare(Connection connection, Integer transactionTimeout) throws SQLException;
 
     /**
      * 给 Statement 设置参数
