@@ -2,6 +2,7 @@ package com.ly.zmn48644.executor;
 
 import com.ly.zmn48644.mapping.MappedStatement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,7 +12,8 @@ public class SimpleExecutor extends BaseExecutor {
 
     @Override
     public <E> List<E> doQuery(MappedStatement mappedStatement, Object parameter) {
-        return null;
+        System.out.printf("SimpleExecutor:doQuery");
+        return new ArrayList<>();
     }
 
     @Override

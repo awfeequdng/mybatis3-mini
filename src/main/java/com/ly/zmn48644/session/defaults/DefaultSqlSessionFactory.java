@@ -1,8 +1,13 @@
 package com.ly.zmn48644.session.defaults;
 
+import com.ly.zmn48644.executor.Executor;
 import com.ly.zmn48644.session.Configuration;
+import com.ly.zmn48644.session.ExecutorType;
 import com.ly.zmn48644.session.SqlSession;
 import com.ly.zmn48644.session.SqlSessionFactory;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
@@ -14,6 +19,15 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
     @Override
     public SqlSession openSession() {
-        return new DefaultSqlSession(configuration);
+        return openSessionFromDataSource(ExecutorType.SIMPLE);
+    }
+
+    private SqlSession openSessionFromDataSource(ExecutorType execType) {
+        try {
+            final Executor executor = configuration.newExecutor(execType);
+            return new DefaultSqlSession(configuration, executor);
+        } catch (Exception e) {
+        }
+        return null;
     }
 }

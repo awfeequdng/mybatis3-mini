@@ -1,6 +1,8 @@
 package com.ly.zmn48644.session;
 
 import com.ly.zmn48644.binding.MapperRegistry;
+import com.ly.zmn48644.executor.Executor;
+import com.ly.zmn48644.executor.SimpleExecutor;
 import com.ly.zmn48644.mapping.MappedStatement;
 
 import java.util.HashMap;
@@ -18,8 +20,8 @@ public class Configuration {
         mapperRegistry.addMapper(type);
     }
 
-    public <T> T getMapper(Class<T> type,SqlSession sqlSession) {
-        return mapperRegistry.getMapper(type,sqlSession);
+    public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
+        return mapperRegistry.getMapper(type, sqlSession);
     }
 
     /**
@@ -41,4 +43,21 @@ public class Configuration {
         return mappedStatements.get(id);
     }
 
+    /**
+     * 创建执行器
+     *
+     * @param execType
+     * @return
+     */
+    public Executor newExecutor(ExecutorType execType) {
+        Executor executor;
+        if (ExecutorType.BATCH.equals(execType)) {
+            executor = null;
+        } else if (ExecutorType.REUSE.equals(execType)) {
+            executor = null;
+        } else {
+            executor = new SimpleExecutor();
+        }
+        return executor;
+    }
 }
