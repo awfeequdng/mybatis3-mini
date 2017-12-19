@@ -33,7 +33,7 @@ public class XMLStatementBuilder extends BaseBuilder {
         ms.setSqlSource(sqlSource);
         String nodeName = context.getName();
         SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase(Locale.ENGLISH));
-        ms.setSqlCommandType(sqlCommandType);
+        ms.setSqlCommandType(sqlCommandType, configuration);
 
         this.configuration.addMappedStatement(ms);
 

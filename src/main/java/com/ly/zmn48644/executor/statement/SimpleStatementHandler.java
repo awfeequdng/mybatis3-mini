@@ -36,7 +36,6 @@ public class SimpleStatementHandler extends BaseStatementHandler {
     @Override
     public <E> List<E> query(Statement statement) throws SQLException {
         String sql = boundSql.getSql();
-
         statement.execute(sql);
         //处理查询到的结果
         return null;

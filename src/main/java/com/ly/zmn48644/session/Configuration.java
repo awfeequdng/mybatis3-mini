@@ -3,6 +3,10 @@ package com.ly.zmn48644.session;
 import com.ly.zmn48644.binding.MapperRegistry;
 import com.ly.zmn48644.executor.Executor;
 import com.ly.zmn48644.executor.SimpleExecutor;
+import com.ly.zmn48644.executor.statement.RoutingStatementHandler;
+import com.ly.zmn48644.executor.statement.SimpleStatementHandler;
+import com.ly.zmn48644.executor.statement.StatementHandler;
+import com.ly.zmn48644.mapping.BoundSql;
 import com.ly.zmn48644.mapping.MappedStatement;
 
 import java.util.HashMap;
@@ -44,6 +48,16 @@ public class Configuration {
     }
 
     /**
+     * 创建 statement 处理器
+     *
+     * @return
+     */
+    public StatementHandler newStatementHandler(MappedStatement mappedStatement, Object parameter) {
+        StatementHandler statementHandler = new RoutingStatementHandler(mappedStatement,parameter);
+        return statementHandler;
+    }
+
+    /**
      * 创建执行器
      *
      * @param execType
@@ -60,4 +74,6 @@ public class Configuration {
         }
         return executor;
     }
+
+
 }

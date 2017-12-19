@@ -2,6 +2,7 @@ package com.ly.zmn48644.executor;
 
 import com.ly.zmn48644.mapping.MappedStatement;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -40,7 +41,7 @@ public abstract class BaseExecutor implements Executor {
      * @param <E>
      * @return
      */
-    public abstract <E> List<E> doQuery(MappedStatement mappedStatement, Object parameter);
+    public abstract <E> List<E> doQuery(MappedStatement mappedStatement, Object parameter) throws SQLException;
 
     /**
      * 委托给子类的执行更新方法
