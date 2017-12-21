@@ -3,6 +3,10 @@ package com.ly.zmn48644.transaction;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+
+/**
+ * 将事务相关的操作,封装到 Transaction 中.
+ */
 public interface Transaction {
     /**
      * 获取数据库连接
