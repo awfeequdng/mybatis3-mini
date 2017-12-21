@@ -1,7 +1,9 @@
 package com.ly.zmn48644.executor;
 
 import com.ly.zmn48644.mapping.MappedStatement;
+import com.ly.zmn48644.transaction.Transaction;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -11,20 +13,39 @@ import java.util.List;
  */
 public abstract class BaseExecutor implements Executor {
 
+    public BaseExecutor(Transaction transaction) {
+        this.transaction = transaction;
+    }
+
+    //事务管理器
+    //子类执行器中的 数据库连接从此获取.
+    protected Transaction transaction;
+
+    /**
+     * 获取 数据库连接
+     * @return
+     * @throws SQLException
+     */
+    protected Connection getConnection() throws SQLException {
+        return transaction.getConnection();
+    }
+
     /**
      * 面向上层模块的查询方法
+     *
      * @param mappedStatement
      * @param parameter
      * @param <E>
      * @return
      */
     @Override
-    public <E> List<E> query(MappedStatement mappedStatement, Object parameter) {
+    public <E> List<E> query(MappedStatement mappedStatement, Object parameter) throws SQLException {
         return doQuery(mappedStatement, parameter);
     }
 
     /**
      * 面向上层模块的更新方法
+     *
      * @param mappedStatement
      * @param parameter
      * @return
@@ -36,6 +57,7 @@ public abstract class BaseExecutor implements Executor {
 
     /**
      * 委托给子类的执行查询方法
+     *
      * @param mappedStatement
      * @param parameter
      * @param <E>
@@ -45,6 +67,7 @@ public abstract class BaseExecutor implements Executor {
 
     /**
      * 委托给子类的执行更新方法
+     *
      * @param mappedStatement
      * @param parameter
      * @return

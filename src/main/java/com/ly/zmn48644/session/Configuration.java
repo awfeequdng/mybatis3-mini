@@ -8,6 +8,7 @@ import com.ly.zmn48644.executor.statement.SimpleStatementHandler;
 import com.ly.zmn48644.executor.statement.StatementHandler;
 import com.ly.zmn48644.mapping.BoundSql;
 import com.ly.zmn48644.mapping.MappedStatement;
+import com.ly.zmn48644.transaction.Transaction;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class Configuration {
      * @return
      */
     public StatementHandler newStatementHandler(MappedStatement mappedStatement, Object parameter) {
-        StatementHandler statementHandler = new RoutingStatementHandler(mappedStatement,parameter);
+        StatementHandler statementHandler = new RoutingStatementHandler(mappedStatement, parameter);
         return statementHandler;
     }
 
@@ -63,14 +64,14 @@ public class Configuration {
      * @param execType
      * @return
      */
-    public Executor newExecutor(ExecutorType execType) {
+    public Executor newExecutor(Transaction transaction, ExecutorType execType) {
         Executor executor;
         if (ExecutorType.BATCH.equals(execType)) {
             executor = null;
         } else if (ExecutorType.REUSE.equals(execType)) {
             executor = null;
         } else {
-            executor = new SimpleExecutor();
+            executor = new SimpleExecutor(transaction);
         }
         return executor;
     }

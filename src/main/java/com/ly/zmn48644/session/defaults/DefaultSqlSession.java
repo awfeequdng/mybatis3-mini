@@ -5,6 +5,7 @@ import com.ly.zmn48644.mapping.MappedStatement;
 import com.ly.zmn48644.session.Configuration;
 import com.ly.zmn48644.session.SqlSession;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,8 +44,12 @@ public class DefaultSqlSession implements SqlSession {
     @Override
     public <E> List<E> selectList(String statement) {
         MappedStatement ms = configuration.getMappedStatement(statement);
-        //调用执行器完成查询操作
-        return executor.query(ms, null);
+        try {
+            //调用执行器完成查询操作
+            return executor.query(ms, null);
+        } catch (SQLException e) {
+            throw new RuntimeException("执行数据库查询异常!");
+        }
     }
 
     //这里返回的是指定接口的代理对象

@@ -3,7 +3,9 @@ package com.ly.zmn48644.executor;
 import com.ly.zmn48644.executor.statement.StatementHandler;
 import com.ly.zmn48644.mapping.MappedStatement;
 import com.ly.zmn48644.session.Configuration;
+import com.ly.zmn48644.transaction.Transaction;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -12,6 +14,10 @@ import java.util.List;
  * 普通执行器实现
  */
 public class SimpleExecutor extends BaseExecutor {
+
+    public SimpleExecutor(Transaction transaction) {
+        super(transaction);
+    }
 
     @Override
     public <E> List<E> doQuery(MappedStatement mappedStatement, Object parameter) throws SQLException {
@@ -25,9 +31,13 @@ public class SimpleExecutor extends BaseExecutor {
     }
 
     private Statement prepareStatement(StatementHandler statementHandler) throws SQLException {
-
-        statementHandler.prepare(null,1);
-        return null;
+        //获取数据库连接
+        Connection connection = getConnection();
+        //创建 statement
+        Statement statement = statementHandler.prepare(connection, 1);
+        //处理 占位符
+        statementHandler.parameterize(statement);
+        return statement;
     }
 
     @Override

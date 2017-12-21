@@ -24,7 +24,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
     private SqlSession openSessionFromDataSource(ExecutorType execType) {
         try {
-            final Executor executor = configuration.newExecutor(execType);
+            final Executor executor = configuration.newExecutor(null, execType);
             return new DefaultSqlSession(configuration, executor);
         } catch (Exception e) {
         }
