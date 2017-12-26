@@ -5,6 +5,7 @@ import com.ly.zmn48644.session.Configuration;
 import com.ly.zmn48644.session.ExecutorType;
 import com.ly.zmn48644.session.SqlSession;
 import com.ly.zmn48644.session.SqlSessionFactory;
+import com.ly.zmn48644.transaction.Transaction;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -24,7 +25,9 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
     private SqlSession openSessionFromDataSource(ExecutorType execType) {
         try {
-            final Executor executor = configuration.newExecutor(null, execType);
+
+            Transaction transaction = null;
+            final Executor executor = configuration.newExecutor(transaction, execType);
             return new DefaultSqlSession(configuration, executor);
         } catch (Exception e) {
         }

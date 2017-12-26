@@ -7,6 +7,7 @@ import com.ly.zmn48644.executor.statement.RoutingStatementHandler;
 import com.ly.zmn48644.executor.statement.SimpleStatementHandler;
 import com.ly.zmn48644.executor.statement.StatementHandler;
 import com.ly.zmn48644.mapping.BoundSql;
+import com.ly.zmn48644.mapping.Environment;
 import com.ly.zmn48644.mapping.MappedStatement;
 import com.ly.zmn48644.transaction.Transaction;
 
@@ -17,6 +18,12 @@ import java.util.Map;
  * 全局配置中心
  */
 public class Configuration {
+
+
+    /**
+     * 数据源环境
+     */
+    protected Environment environment;
 
     private MapperRegistry mapperRegistry = new MapperRegistry();
     protected final Map<String, MappedStatement> mappedStatements = new HashMap<>();
@@ -76,5 +83,7 @@ public class Configuration {
         return executor;
     }
 
-
+    public Environment getEnvironment() {
+        return environment;
+    }
 }

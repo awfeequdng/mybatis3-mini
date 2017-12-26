@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 
 /**
- * 将事务相关的操作,封装到 Transaction 中.
+ * 将事务相关的操作,封装到 Transaction(事务管理器) 中.
  */
 public interface Transaction {
     /**
