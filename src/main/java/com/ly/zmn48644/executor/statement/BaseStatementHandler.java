@@ -1,5 +1,6 @@
 package com.ly.zmn48644.executor.statement;
 
+import com.ly.zmn48644.executor.resultset.ResultSetHandler;
 import com.ly.zmn48644.mapping.BoundSql;
 
 import java.sql.Connection;
@@ -8,7 +9,9 @@ import java.sql.Statement;
 
 public abstract class BaseStatementHandler implements StatementHandler {
 
-    protected final BoundSql boundSql;
+    private final BoundSql boundSql;
+
+    //private final ResultSetHandler resultSetHandler;
 
     public BaseStatementHandler(BoundSql boundSql) {
         this.boundSql = boundSql;

@@ -3,6 +3,7 @@ package com.ly.zmn48644.executor.statement;
 import com.ly.zmn48644.mapping.BoundSql;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -36,7 +37,7 @@ public class SimpleStatementHandler extends BaseStatementHandler {
     @Override
     public <E> List<E> query(Statement statement) throws SQLException {
         String sql = boundSql.getSql();
-        statement.execute(sql);
+        ResultSet resultSet = statement.executeQuery(sql);
         //处理查询到的结果
         return null;
     }

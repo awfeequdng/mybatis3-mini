@@ -1,23 +1,37 @@
 package com.ly.zmn48644.build;
 
 import com.ly.zmn48644.build.xml.XMLMapperBuilder;
+import com.ly.zmn48644.datasource.DataSourceFactory;
 import com.ly.zmn48644.io.Resources;
+import com.ly.zmn48644.mapping.Environment;
 import com.ly.zmn48644.parsing.XNode;
 import com.ly.zmn48644.parsing.XPathParser;
 import com.ly.zmn48644.session.Configuration;
+import com.ly.zmn48644.transaction.Transaction;
+import com.ly.zmn48644.transaction.TransactionFactory;
+import com.ly.zmn48644.type.TypeAliasRegistry;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 
 public class XMLConfigBuilder extends BaseBuilder {
 
     private XPathParser parser;
+
+    //配置文件中的环境Id
+    private String environment;
+
+
 
     public XMLConfigBuilder(InputStream inputStream) {
         //在这里创建全局配置对象
         super(new Configuration());
         //创建XPathParser对象用于解析XML
         parser = new XPathParser(inputStream);
+
     }
 
     public Configuration parse() {
@@ -29,8 +43,82 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
 
     private void parseConfiguration(XNode root) {
+        try {
+            //解析environments节点
+            environmentsElement(root.evalNode("environments"));
+            //解析映射配置
+            mapperElement(root.evalNode("mappers"));
+        } catch (Exception e) {
+            throw new RuntimeException("配置解析异常!");
+        }
+    }
 
-        mapperElement(root.evalNode("mappers"));
+    /**
+     * 解析环境配置
+     *
+     * @param environments
+     */
+    private void environmentsElement(XNode environments) throws Exception {
+
+        if (this.environment == null) {
+            this.environment = environments.getStringAttribute("default");
+        }
+
+        for (XNode children : environments.getChildren()) {
+            String id = children.getStringAttribute("id");
+            if (isSpecifiedEnvironment(id)) {
+                TransactionFactory transactionFactory = transactionManagerElement(children.evalNode("transactionManager"));
+                DataSourceFactory dataSourceFactory = dataSourceFactoryElement(children.evalNode("dataSource"));
+
+                DataSource dataSource = dataSourceFactory.getDataSource();
+                //创建 环境配置对象
+                Environment environment = new Environment(id,transactionFactory,dataSource);
+                //将环境配置对象设置给全局配置对象
+                this.configuration.setEnvironment(environment);
+            }
+        }
+
+    }
+
+    private DataSourceFactory dataSourceFactoryElement(XNode context) throws Exception {
+        if (context!=null){
+            String type = context.getStringAttribute("type");
+            Properties properties = context.getChildrenAsProperties();
+            DataSourceFactory dataSourceFactory = (DataSourceFactory)resolveClass(type).newInstance();
+            dataSourceFactory.setProperties(properties);
+            return dataSourceFactory;
+        }
+        throw new RuntimeException("数据源配置解析失败!");
+    }
+
+    /**
+     * 解析事务管理器
+     * @param context
+     * @return
+     * @throws Exception
+     */
+    private TransactionFactory transactionManagerElement(XNode context) throws Exception {
+        if (context != null) {
+            String type = context.getStringAttribute("type");
+            TransactionFactory transactionFactory = (TransactionFactory) resolveClass(type).newInstance();
+            return transactionFactory;
+        }
+        throw new RuntimeException("事务管理器配置解析失败!");
+    }
+
+
+
+    private boolean isSpecifiedEnvironment(String id) {
+        if (id == null) {
+            throw new RuntimeException("必须设置环境ID!");
+        }
+        if (this.environment == null) {
+            throw new RuntimeException("必须设置默认的环境ID!");
+        }
+        if (this.environment.equals(id)) {
+            return true;
+        }
+        return false;
     }
 
     /**

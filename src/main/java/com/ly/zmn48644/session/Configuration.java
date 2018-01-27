@@ -1,6 +1,7 @@
 package com.ly.zmn48644.session;
 
 import com.ly.zmn48644.binding.MapperRegistry;
+import com.ly.zmn48644.datasource.unpooled.UnpooledDataSourceFactory;
 import com.ly.zmn48644.executor.Executor;
 import com.ly.zmn48644.executor.SimpleExecutor;
 import com.ly.zmn48644.executor.statement.RoutingStatementHandler;
@@ -10,6 +11,8 @@ import com.ly.zmn48644.mapping.BoundSql;
 import com.ly.zmn48644.mapping.Environment;
 import com.ly.zmn48644.mapping.MappedStatement;
 import com.ly.zmn48644.transaction.Transaction;
+import com.ly.zmn48644.transaction.jdbc.JdbcTransactionFactory;
+import com.ly.zmn48644.type.TypeAliasRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,8 +28,20 @@ public class Configuration {
      */
     protected Environment environment;
 
+    private TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
+
     private MapperRegistry mapperRegistry = new MapperRegistry();
+
     protected final Map<String, MappedStatement> mappedStatements = new HashMap<>();
+
+
+    public Configuration() {
+        //注册事务管理器别名
+        typeAliasRegistry.registerAlias("JDBC", JdbcTransactionFactory.class);
+        //注册非池化数据源别名
+        typeAliasRegistry.registerAlias("UNPOOLED", UnpooledDataSourceFactory.class);
+
+    }
 
     public <T> void addMapper(Class<T> type) {
         mapperRegistry.addMapper(type);
@@ -85,5 +100,13 @@ public class Configuration {
 
     public Environment getEnvironment() {
         return environment;
+    }
+
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
+
+    public TypeAliasRegistry getTypeAliasRegistry() {
+        return typeAliasRegistry;
     }
 }

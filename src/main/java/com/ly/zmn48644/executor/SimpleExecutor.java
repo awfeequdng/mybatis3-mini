@@ -23,6 +23,7 @@ public class SimpleExecutor extends BaseExecutor {
     public <E> List<E> doQuery(MappedStatement mappedStatement, Object parameter) throws SQLException {
         //调用全局配置对象获取 StatementHandler 对象
         Configuration configuration = mappedStatement.getConfiguration();
+
         StatementHandler statementHandler = configuration.newStatementHandler(mappedStatement, parameter);
 
         Statement statement = prepareStatement(statementHandler);

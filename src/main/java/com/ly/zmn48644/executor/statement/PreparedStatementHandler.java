@@ -3,6 +3,8 @@ package com.ly.zmn48644.executor.statement;
 import com.ly.zmn48644.mapping.BoundSql;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
@@ -27,7 +29,9 @@ public class PreparedStatementHandler extends BaseStatementHandler {
     }
 
     @Override
-    public <E> List<E> query(Statement statement) {
+    public <E> List<E> query(Statement statement) throws SQLException {
+        PreparedStatement preparedStatement = (PreparedStatement) statement;
+        preparedStatement.execute();
         return null;
     }
 }

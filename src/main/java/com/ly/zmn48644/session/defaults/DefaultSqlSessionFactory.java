@@ -1,6 +1,7 @@
 package com.ly.zmn48644.session.defaults;
 
 import com.ly.zmn48644.executor.Executor;
+import com.ly.zmn48644.mapping.Environment;
 import com.ly.zmn48644.session.Configuration;
 import com.ly.zmn48644.session.ExecutorType;
 import com.ly.zmn48644.session.SqlSession;
@@ -25,12 +26,12 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
     private SqlSession openSessionFromDataSource(ExecutorType execType) {
         try {
-
-            Transaction transaction = null;
+            Environment environment = this.configuration.getEnvironment();
+            Transaction transaction = environment.getTransactionFactory().newTransaction(environment.getDatasource(), null, false);
             final Executor executor = configuration.newExecutor(transaction, execType);
             return new DefaultSqlSession(configuration, executor);
         } catch (Exception e) {
+            throw new RuntimeException("打开会话异常!");
         }
-        return null;
     }
 }
