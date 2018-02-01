@@ -1,6 +1,7 @@
 package com.ly.zmn48644.executor.statement;
 
 import com.ly.zmn48644.mapping.BoundSql;
+import com.ly.zmn48644.mapping.MappedStatement;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -11,8 +12,8 @@ import java.util.List;
 public class SimpleStatementHandler extends BaseStatementHandler {
 
 
-    public SimpleStatementHandler(BoundSql boundSql) {
-        super(boundSql);
+    public SimpleStatementHandler(MappedStatement ms, Object parameter, BoundSql boundSql) {
+        super(ms,parameter,boundSql);
     }
 
     @Override
@@ -37,8 +38,8 @@ public class SimpleStatementHandler extends BaseStatementHandler {
     @Override
     public <E> List<E> query(Statement statement) throws SQLException {
         String sql = boundSql.getSql();
-        ResultSet resultSet = statement.executeQuery(sql);
-        //处理查询到的结果
-        return null;
+        statement.executeQuery(sql);
+        //调用ResultSetHandler处理结果集
+        return resultSetHandler.handleResultSets(statement);
     }
 }

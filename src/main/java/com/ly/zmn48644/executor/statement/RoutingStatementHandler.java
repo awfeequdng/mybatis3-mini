@@ -19,13 +19,13 @@ public class RoutingStatementHandler implements StatementHandler {
         BoundSql boundSql = ms.getSqlSource().getBoundSql(parameter);
         switch (ms.getStatementType()) {
             case CALLABLE:
-                delegate = new CallableStatementHandler(boundSql);
+                delegate = new CallableStatementHandler(ms,parameter,boundSql);
                 break;
             case PREPARED:
-                delegate = new PreparedStatementHandler(boundSql);
+                delegate = new PreparedStatementHandler(ms,parameter,boundSql);
                 break;
             case STATEMENT:
-                delegate = new SimpleStatementHandler(boundSql);
+                delegate = new SimpleStatementHandler(ms,parameter,boundSql);
                 break;
             default:
                 throw new RuntimeException("StatementType 配置错误!");

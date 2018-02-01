@@ -1,14 +1,15 @@
 package com.ly.zmn48644.executor.statement;
 
 import com.ly.zmn48644.mapping.BoundSql;
+import com.ly.zmn48644.mapping.MappedStatement;
 
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.List;
 
 public class CallableStatementHandler extends BaseStatementHandler {
-    public CallableStatementHandler(BoundSql boundSql) {
-        super(boundSql);
+    public CallableStatementHandler(MappedStatement ms,Object parameter ,BoundSql boundSql) {
+        super(ms,parameter, boundSql);
     }
 
     @Override

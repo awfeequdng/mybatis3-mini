@@ -4,6 +4,10 @@ import com.ly.zmn48644.binding.MapperRegistry;
 import com.ly.zmn48644.datasource.unpooled.UnpooledDataSourceFactory;
 import com.ly.zmn48644.executor.Executor;
 import com.ly.zmn48644.executor.SimpleExecutor;
+import com.ly.zmn48644.executor.parameter.DefaultParameterHandler;
+import com.ly.zmn48644.executor.parameter.ParameterHandler;
+import com.ly.zmn48644.executor.resultset.DefaultResultSetHandler;
+import com.ly.zmn48644.executor.resultset.ResultSetHandler;
 import com.ly.zmn48644.executor.statement.RoutingStatementHandler;
 import com.ly.zmn48644.executor.statement.SimpleStatementHandler;
 import com.ly.zmn48644.executor.statement.StatementHandler;
@@ -109,4 +113,45 @@ public class Configuration {
     public TypeAliasRegistry getTypeAliasRegistry() {
         return typeAliasRegistry;
     }
+
+    /**
+     * 创建参数处理器
+     * @param ms
+     * @param parameter
+     * @param boundSql
+     * @return
+     */
+    public ParameterHandler newParameterHandler(MappedStatement ms, Object parameter, BoundSql boundSql) {
+        ParameterHandler parameterHandler = new DefaultParameterHandler(ms,parameter,boundSql);
+        return parameterHandler;
+    }
+
+    /**
+     * 创建结果集处理器
+     * @param ms
+     * @param boundSql
+     * @param parameterHandler
+     * @return
+     */
+    public ResultSetHandler newResultSetHandler(MappedStatement ms, BoundSql boundSql, ParameterHandler parameterHandler) {
+        ResultSetHandler resultSetHandler = new DefaultResultSetHandler(ms,boundSql,parameterHandler);
+        return resultSetHandler;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

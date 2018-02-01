@@ -22,7 +22,7 @@
 
     <!--映射文件配置-->
     <mappers>
-        <mapper resource="mapper/UserMapper.xml"/>
+        <mapper resource="mapper/AuthorMapper.xml"/>
     </mappers>
 
 </configuration>
