@@ -2,6 +2,9 @@ package com.ly.zmn48644.mapping;
 
 import com.ly.zmn48644.session.Configuration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MappedStatement {
     private Configuration configuration;
     private String id;
@@ -9,10 +12,14 @@ public class MappedStatement {
     private SqlCommandType sqlCommandType;
     private StatementType statementType;
 
+    //保存结果映射规则
+    private ResultMap resultMap;
+
     public MappedStatement() {
         //默认是 PREPARED
         this.statementType = StatementType.PREPARED;
     }
+
 
     public SqlCommandType getSqlCommandType() {
         return sqlCommandType;
@@ -49,5 +56,14 @@ public class MappedStatement {
 
     public Configuration getConfiguration() {
         return configuration;
+    }
+
+
+    public ResultMap getResultMap() {
+        return resultMap;
+    }
+
+    public void setResultMap(ResultMap resultMap) {
+        this.resultMap = resultMap;
     }
 }

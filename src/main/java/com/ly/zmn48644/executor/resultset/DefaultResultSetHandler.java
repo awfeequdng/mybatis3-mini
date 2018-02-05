@@ -3,10 +3,12 @@ package com.ly.zmn48644.executor.resultset;
 import com.ly.zmn48644.executor.parameter.ParameterHandler;
 import com.ly.zmn48644.mapping.BoundSql;
 import com.ly.zmn48644.mapping.MappedStatement;
+import com.ly.zmn48644.mapping.ResultMap;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,16 +27,20 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
     @Override
     public <E> List<E> handleResultSets(Statement stmt) throws SQLException {
+
+        final List<Object> multipleResults = new ArrayList<>();
+
         ResultSet resultSet = stmt.getResultSet();
 
-        while (resultSet.next()){
-            System.out.println(resultSet.getString(1));
-            System.out.println(resultSet.getString(2));
-            System.out.println(resultSet.getString(3));
-            System.out.println(resultSet.getString(4));
-            System.out.println(resultSet.getString(5));
-        }
+        ResultMap resultMap = ms.getResultMap();
+
+
+         handleResultSet(resultSet,resultMap,multipleResults);
 
         return null;
+    }
+
+    private void handleResultSet(ResultSet resultSet, ResultMap resultMap, List<Object> multipleResults) {
+
     }
 }

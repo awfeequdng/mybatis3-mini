@@ -21,9 +21,12 @@ public class XMLMapperBuilder extends BaseBuilder {
         super(configuration);
         this.resource = resource;
         this.parser = new XPathParser(inputStream);
-        this.builderAssistant = new MapperBuilderAssistant();
+        this.builderAssistant = new MapperBuilderAssistant(configuration);
     }
 
+    /**
+     * 处理mapper元素配置
+     */
     public void parse() {
 
         configurationElement(parser.evalNode("/mapper"));

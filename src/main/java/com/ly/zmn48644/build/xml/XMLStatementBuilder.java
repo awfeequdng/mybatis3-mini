@@ -25,18 +25,10 @@ public class XMLStatementBuilder extends BaseBuilder {
         //解析XML中的sql语句
         String id = context.getStringAttribute("id");
         SqlSource sqlSource = createSqlSource(this.context);
-
-
-        MappedStatement ms = new MappedStatement();
-        //命名空间 + 方法名
-        ms.setId(builderAssistant.getCurrentNamespace() + "." + id);
-        ms.setSqlSource(sqlSource);
+        //获取 resultType resultMap
+        String resultType = context.getStringAttribute("resultType");
         String nodeName = context.getName();
-        SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase(Locale.ENGLISH));
-        ms.setSqlCommandType(sqlCommandType, configuration);
-
-        this.configuration.addMappedStatement(ms);
-
+        builderAssistant.addMappedStatement(id, nodeName, resultType, sqlSource);
     }
 
     private SqlSource createSqlSource(XNode context) {
