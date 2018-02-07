@@ -4,6 +4,10 @@ import com.ly.zmn48644.executor.parameter.ParameterHandler;
 import com.ly.zmn48644.mapping.BoundSql;
 import com.ly.zmn48644.mapping.MappedStatement;
 import com.ly.zmn48644.mapping.ResultMap;
+import com.ly.zmn48644.reflection.MetaObject;
+import com.ly.zmn48644.reflection.factory.DefaultObjectFactory;
+import com.ly.zmn48644.reflection.factory.ObjectFactory;
+import com.ly.zmn48644.session.Configuration;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,16 +17,24 @@ import java.util.List;
 
 /**
  * 默认的结果集处理器
+ * 核心方法 handleResultSets 用于将jdbc原生ResultSet对象中的数据设置到对应的结果对象中.
  */
 public class DefaultResultSetHandler implements ResultSetHandler {
     private final MappedStatement ms;
     private final BoundSql boundSql;
     private final ParameterHandler parameterHandler;
 
+    private final ObjectFactory objectFactory;
+
+    //全局配置对象
+    private final Configuration configuration;
+
     public DefaultResultSetHandler(MappedStatement ms, BoundSql boundSql, ParameterHandler parameterHandler) {
         this.ms = ms;
         this.boundSql = boundSql;
         this.parameterHandler = parameterHandler;
+        this.objectFactory = ms.getConfiguration().getObjectFactory();
+        this.configuration = ms.getConfiguration();
     }
 
     @Override
@@ -33,14 +45,53 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         ResultSet resultSet = stmt.getResultSet();
 
         ResultMap resultMap = ms.getResultMap();
-
-
-         handleResultSet(resultSet,resultMap,multipleResults);
-
+        //包装resultSet
+        ResultSetWrapper rsw = new ResultSetWrapper(resultSet, configuration);
+        handleResultSet(rsw, resultMap, multipleResults);
         return null;
     }
 
-    private void handleResultSet(ResultSet resultSet, ResultMap resultMap, List<Object> multipleResults) {
-
+    //处理单个ResultSet
+    private void handleResultSet(ResultSetWrapper rsw, ResultMap resultMap, List<Object> multipleResults) throws SQLException {
+        while (rsw.getResultSet().next()) {
+            Object rowValue = getRowValue(rsw, resultMap);
+            multipleResults.add(rowValue);
+        }
     }
+
+    private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap) {
+        //创建一个resultType指定的对象
+        Object rowValue = createResultObject(resultMap);
+
+        final MetaObject metaObject = configuration.newMetaObject(rowValue);
+
+        return rowValue;
+    }
+
+    /**
+     * 创建结果对象
+     *
+     * @param resultMap
+     * @return
+     */
+    private Object createResultObject(ResultMap resultMap) {
+        final Class<?> resultType = resultMap.getType();
+        return objectFactory.create(resultType);
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -20,6 +20,11 @@
         </environment>
     </environments>
 
+    <!--别名配置-->
+    <typeAliases>
+        <package name="com.ly.zmn48644.model"/>
+    </typeAliases>
+
     <!--映射文件配置-->
     <mappers>
         <mapper resource="mapper/AuthorMapper.xml"/>

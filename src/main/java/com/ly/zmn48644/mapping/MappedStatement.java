@@ -2,9 +2,6 @@ package com.ly.zmn48644.mapping;
 
 import com.ly.zmn48644.session.Configuration;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MappedStatement {
     private Configuration configuration;
     private String id;

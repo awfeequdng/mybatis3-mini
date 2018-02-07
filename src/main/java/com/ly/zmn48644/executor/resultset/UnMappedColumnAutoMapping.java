@@ -21,4 +21,20 @@ public class UnMappedColumnAutoMapping {
         this.typeHandler = typeHandler;
         this.primitive = primitive;
     }
+
+    public String getColumn() {
+        return column;
+    }
+
+    public String getProperty() {
+        return property;
+    }
+
+    public TypeHandler<?> getTypeHandler() {
+        return typeHandler;
+    }
+
+    public boolean isPrimitive() {
+        return primitive;
+    }
 }

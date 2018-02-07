@@ -15,6 +15,7 @@ import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Properties;
 
 public class XMLConfigBuilder extends BaseBuilder {
@@ -46,10 +47,31 @@ public class XMLConfigBuilder extends BaseBuilder {
         try {
             //解析environments节点
             environmentsElement(root.evalNode("environments"));
+
+            //解析 typeAliases 配置
+            typeAliasesElement(root.evalNode("typeAliases"));
+
             //解析映射配置
             mapperElement(root.evalNode("mappers"));
         } catch (Exception e) {
             throw new RuntimeException("配置解析异常!");
+        }
+    }
+
+    /**
+     * 解析类型别名配置
+     * @param typeAliases
+     */
+    private void typeAliasesElement(XNode typeAliases) {
+        if (typeAliases!=null){
+            List<XNode> children = typeAliases.getChildren();
+            for (XNode child : children) {
+                if ("package".equals(child.getName())){
+                    String packageName = child.getStringAttribute("name");
+                    //指定包名,注册此包下面所有类的别名
+                    configuration.getTypeAliasRegistry().registerAliases(packageName);
+                }
+            }
         }
     }
 

@@ -39,7 +39,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         //将配置的resultType指定的类加载为class
         Class<?> resultTypeClass = resolveClass(resultType);
         resultMap.setType(resultTypeClass);
-        ms.addResultMaps(resultMap);
+        ms.setResultMap(resultMap);
 
         this.configuration.addMappedStatement(ms);
     }

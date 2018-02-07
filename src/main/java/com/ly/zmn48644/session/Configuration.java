@@ -14,6 +14,13 @@ import com.ly.zmn48644.executor.statement.StatementHandler;
 import com.ly.zmn48644.mapping.BoundSql;
 import com.ly.zmn48644.mapping.Environment;
 import com.ly.zmn48644.mapping.MappedStatement;
+import com.ly.zmn48644.reflection.DefaultReflectorFactory;
+import com.ly.zmn48644.reflection.MetaObject;
+import com.ly.zmn48644.reflection.ReflectorFactory;
+import com.ly.zmn48644.reflection.factory.DefaultObjectFactory;
+import com.ly.zmn48644.reflection.factory.ObjectFactory;
+import com.ly.zmn48644.reflection.warpper.DefaultObjectWrapperFactory;
+import com.ly.zmn48644.reflection.warpper.ObjectWrapperFactory;
 import com.ly.zmn48644.transaction.Transaction;
 import com.ly.zmn48644.transaction.jdbc.JdbcTransactionFactory;
 import com.ly.zmn48644.type.TypeAliasRegistry;
@@ -25,11 +32,35 @@ import java.util.Map;
  * 全局配置中心
  */
 public class Configuration {
+    //反射器工厂
+    protected ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+
+    //对象工厂
+    protected ObjectFactory objectFactory = new DefaultObjectFactory();
+
+    //对象包装器工厂
+    protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
 
 
-    /**
-     * 数据源环境
-     */
+    public MetaObject newMetaObject(Object object) {
+        return MetaObject.forObject(object, objectFactory, objectWrapperFactory, reflectorFactory);
+    }
+
+    //是否是用类别名配置
+    protected boolean useColumnLabel = true;
+
+    public boolean isUseColumnLabel() {
+        return useColumnLabel;
+    }
+
+    public void setUseColumnLabel(boolean useColumnLabel) {
+        this.useColumnLabel = useColumnLabel;
+    }
+
+    public ObjectFactory getObjectFactory() {
+        return objectFactory;
+    }
+
     protected Environment environment;
 
     private TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();

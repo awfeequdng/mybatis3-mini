@@ -1,9 +1,12 @@
 package com.ly.zmn48644.type;
 
 
+import com.ly.zmn48644.io.ResolverUtil;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 类型别名注册中心
@@ -50,5 +53,30 @@ public class TypeAliasRegistry {
             value = (Class<T>) TYPE_ALIAS.get(key);
         }
         return value;
+    }
+
+    /**
+     * 指定包名
+     * @param packageName
+     */
+    public void registerAliases(String packageName) {
+        registerAliases(packageName, Object.class);
+    }
+
+    /**
+     * 指定包名 和 限定父类
+     *
+     * @param packageName
+     */
+    public void registerAliases(String packageName, Class<?> superType) {
+        //调用基础工具类
+        ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<Class<?>>();
+        resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
+        Set<Class<? extends Class<?>>> typeSet = resolverUtil.getClasses();
+        for (Class<?> type : typeSet) {
+            if (!type.isAnonymousClass() && !type.isInterface() && !type.isMemberClass()) {
+                registerAlias(type.getSimpleName(), type);
+            }
+        }
     }
 }
