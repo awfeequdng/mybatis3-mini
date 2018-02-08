@@ -6,6 +6,9 @@ import com.ly.zmn48644.io.Resources;
 import com.ly.zmn48644.mapping.Environment;
 import com.ly.zmn48644.parsing.XNode;
 import com.ly.zmn48644.parsing.XPathParser;
+import com.ly.zmn48644.reflection.DefaultReflectorFactory;
+import com.ly.zmn48644.reflection.MetaClass;
+import com.ly.zmn48644.reflection.ReflectorFactory;
 import com.ly.zmn48644.session.Configuration;
 import com.ly.zmn48644.transaction.Transaction;
 import com.ly.zmn48644.transaction.TransactionFactory;
@@ -25,6 +28,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     //配置文件中的环境Id
     private String environment;
 
+    private ReflectorFactory localReflectorFactory = new DefaultReflectorFactory();
 
 
     public XMLConfigBuilder(InputStream inputStream) {
@@ -45,6 +49,11 @@ public class XMLConfigBuilder extends BaseBuilder {
 
     private void parseConfiguration(XNode root) {
         try {
+            //解析settings节点数据,生成为
+            Properties settings = settingsAsProperties(root.evalNode("settings"));
+
+            settingsElement(settings);
+
             //解析environments节点
             environmentsElement(root.evalNode("environments"));
 
@@ -59,14 +68,45 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
 
     /**
+     * 将从配置文件中读取到的配置数据
+     *
+     * @param settings
+     */
+    private void settingsElement(Properties settings) {
+        //下划线转驼峰的配置
+        configuration.setMapUnderscoreToCamelCase(booleanValueOf(settings.getProperty("mapUnderscoreToCamelCase"), true));
+
+
+    }
+
+    private Properties settingsAsProperties(XNode settings) {
+        //兼容没有配置的情况
+        if (settings == null) {
+            //返回空的Properties
+            return new Properties();
+        }
+        MetaClass metaConfig = MetaClass.forClass(Configuration.class, localReflectorFactory);
+        //读取配置完毕
+        Properties props = settings.getChildrenAsProperties();
+        //检查 Configuration 中有没有对应配置的 set方法.
+        for (Object key : props.keySet()) {
+            if (!metaConfig.hasSetter(String.valueOf(key))) {
+                throw new RuntimeException("Configuration 没有 " + key + "对应的set方法!");
+            }
+        }
+        return props;
+    }
+
+    /**
      * 解析类型别名配置
+     *
      * @param typeAliases
      */
     private void typeAliasesElement(XNode typeAliases) {
-        if (typeAliases!=null){
+        if (typeAliases != null) {
             List<XNode> children = typeAliases.getChildren();
             for (XNode child : children) {
-                if ("package".equals(child.getName())){
+                if ("package".equals(child.getName())) {
                     String packageName = child.getStringAttribute("name");
                     //指定包名,注册此包下面所有类的别名
                     configuration.getTypeAliasRegistry().registerAliases(packageName);
@@ -94,7 +134,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 
                 DataSource dataSource = dataSourceFactory.getDataSource();
                 //创建 环境配置对象
-                Environment environment = new Environment(id,transactionFactory,dataSource);
+                Environment environment = new Environment(id, transactionFactory, dataSource);
                 //将环境配置对象设置给全局配置对象
                 this.configuration.setEnvironment(environment);
             }
@@ -103,10 +143,10 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
 
     private DataSourceFactory dataSourceFactoryElement(XNode context) throws Exception {
-        if (context!=null){
+        if (context != null) {
             String type = context.getStringAttribute("type");
             Properties properties = context.getChildrenAsProperties();
-            DataSourceFactory dataSourceFactory = (DataSourceFactory)resolveClass(type).newInstance();
+            DataSourceFactory dataSourceFactory = (DataSourceFactory) resolveClass(type).newInstance();
             dataSourceFactory.setProperties(properties);
             return dataSourceFactory;
         }
@@ -115,6 +155,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 
     /**
      * 解析事务管理器
+     *
      * @param context
      * @return
      * @throws Exception
@@ -127,7 +168,6 @@ public class XMLConfigBuilder extends BaseBuilder {
         }
         throw new RuntimeException("事务管理器配置解析失败!");
     }
-
 
 
     private boolean isSpecifiedEnvironment(String id) {

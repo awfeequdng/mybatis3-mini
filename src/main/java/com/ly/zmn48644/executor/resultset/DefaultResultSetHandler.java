@@ -8,6 +8,7 @@ import com.ly.zmn48644.reflection.MetaObject;
 import com.ly.zmn48644.reflection.factory.DefaultObjectFactory;
 import com.ly.zmn48644.reflection.factory.ObjectFactory;
 import com.ly.zmn48644.session.Configuration;
+import com.ly.zmn48644.type.TypeHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,7 +39,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
 
     @Override
-    public <E> List<E> handleResultSets(Statement stmt) throws SQLException {
+    public List<Object> handleResultSets(Statement stmt) throws SQLException {
 
         final List<Object> multipleResults = new ArrayList<>();
 
@@ -48,7 +49,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         //包装resultSet
         ResultSetWrapper rsw = new ResultSetWrapper(resultSet, configuration);
         handleResultSet(rsw, resultMap, multipleResults);
-        return null;
+        return multipleResults;
     }
 
     //处理单个ResultSet
@@ -64,8 +65,42 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         Object rowValue = createResultObject(resultMap);
 
         final MetaObject metaObject = configuration.newMetaObject(rowValue);
-
+        applyAutomaticMappings(rsw, rowValue, metaObject);
         return rowValue;
+    }
+
+    /**
+     * 自动映射
+     *
+     * @param rowValue
+     * @param metaObject
+     */
+    private void applyAutomaticMappings(ResultSetWrapper rsw, Object rowValue, MetaObject metaObject) {
+        List<UnMappedColumnAutoMapping> autoMappings = createAutomaticMappings(rsw, rowValue, metaObject);
+
+    }
+
+    /**
+     * 创建自动映射器列表
+     *
+     * @param rsw
+     * @param rowValue
+     * @param metaObject
+     * @return
+     */
+    private List<UnMappedColumnAutoMapping> createAutomaticMappings(ResultSetWrapper rsw, Object rowValue, MetaObject metaObject) {
+        List<UnMappedColumnAutoMapping> unMappedColumnAutoMappings = new ArrayList<>();
+        List<String> unMappedColumnNames = rsw.getUnMappedColumnNames();
+        for (String columnName : unMappedColumnNames) {
+            String propertyName = columnName;
+            //根据 propertyName 查找 property, propertyName是支持多级的比如 info.time
+            final String property = metaObject.findProperty(propertyName, configuration.isMapUnderscoreToCamelCase());
+            final Class<?> propertyType = metaObject.getSetterType(property);
+            final TypeHandler<?> typeHandler = rsw.getTypeHandler(propertyType, columnName);
+            UnMappedColumnAutoMapping mapping = new UnMappedColumnAutoMapping(columnName, property, typeHandler, propertyType.isPrimitive());
+            unMappedColumnAutoMappings.add(mapping);
+        }
+        return unMappedColumnAutoMappings;
     }
 
     /**

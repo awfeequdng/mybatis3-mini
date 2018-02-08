@@ -5,6 +5,9 @@ import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * JDBC数据类型枚举类
+ */
 public enum JdbcType {
 
     ARRAY(Types.ARRAY),

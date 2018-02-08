@@ -21,4 +21,9 @@ public class BaseBuilder {
     protected Class<?> resolveAlias(String type) {
         return typeAliasRegistry.resolveAlias(type);
     }
+
+
+    protected Boolean booleanValueOf(String value, Boolean defaultValue) {
+        return value == null ? defaultValue : Boolean.valueOf(value);
+    }
 }

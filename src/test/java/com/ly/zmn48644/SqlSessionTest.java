@@ -23,6 +23,7 @@ public class SqlSessionTest {
         AuthorMapper mapper = sqlSession.getMapper(AuthorMapper.class);
 
         Author author = mapper.selectAuthorById(1);
+
         System.out.println(author.toString());
 
 

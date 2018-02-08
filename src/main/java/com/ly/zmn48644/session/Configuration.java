@@ -24,6 +24,7 @@ import com.ly.zmn48644.reflection.warpper.ObjectWrapperFactory;
 import com.ly.zmn48644.transaction.Transaction;
 import com.ly.zmn48644.transaction.jdbc.JdbcTransactionFactory;
 import com.ly.zmn48644.type.TypeAliasRegistry;
+import com.ly.zmn48644.type.TypeHandlerRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,13 +34,16 @@ import java.util.Map;
  */
 public class Configuration {
     //反射器工厂
-    protected ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    protected final ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
 
     //对象工厂
-    protected ObjectFactory objectFactory = new DefaultObjectFactory();
+    protected final ObjectFactory objectFactory = new DefaultObjectFactory();
 
     //对象包装器工厂
-    protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
+    protected final ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
+
+    //类型转换器注册中心
+    protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
 
 
     public MetaObject newMetaObject(Object object) {
@@ -48,6 +52,17 @@ public class Configuration {
 
     //是否是用类别名配置
     protected boolean useColumnLabel = true;
+
+    //是否启用下划线转驼峰配置
+    protected boolean mapUnderscoreToCamelCase;
+
+    public boolean isMapUnderscoreToCamelCase() {
+        return mapUnderscoreToCamelCase;
+    }
+
+    public void setMapUnderscoreToCamelCase(boolean mapUnderscoreToCamelCase) {
+        this.mapUnderscoreToCamelCase = mapUnderscoreToCamelCase;
+    }
 
     public boolean isUseColumnLabel() {
         return useColumnLabel;
@@ -76,6 +91,10 @@ public class Configuration {
         //注册非池化数据源别名
         typeAliasRegistry.registerAlias("UNPOOLED", UnpooledDataSourceFactory.class);
 
+    }
+
+    public TypeHandlerRegistry getTypeHandlerRegistry() {
+        return typeHandlerRegistry;
     }
 
     public <T> void addMapper(Class<T> type) {
@@ -147,25 +166,27 @@ public class Configuration {
 
     /**
      * 创建参数处理器
+     *
      * @param ms
      * @param parameter
      * @param boundSql
      * @return
      */
     public ParameterHandler newParameterHandler(MappedStatement ms, Object parameter, BoundSql boundSql) {
-        ParameterHandler parameterHandler = new DefaultParameterHandler(ms,parameter,boundSql);
+        ParameterHandler parameterHandler = new DefaultParameterHandler(ms, parameter, boundSql);
         return parameterHandler;
     }
 
     /**
      * 创建结果集处理器
+     *
      * @param ms
      * @param boundSql
      * @param parameterHandler
      * @return
      */
     public ResultSetHandler newResultSetHandler(MappedStatement ms, BoundSql boundSql, ParameterHandler parameterHandler) {
-        ResultSetHandler resultSetHandler = new DefaultResultSetHandler(ms,boundSql,parameterHandler);
+        ResultSetHandler resultSetHandler = new DefaultResultSetHandler(ms, boundSql, parameterHandler);
         return resultSetHandler;
     }
 }
