@@ -8,6 +8,18 @@ public class Author {
     private String bio;
     private String favouriteSection;
 
+    public Author() {
+    }
+
+    public Author(Integer id) {
+        this.id = id;
+    }
+
+    public Author(Integer id, String username) {
+        this.id = id;
+        this.username = username;
+    }
+
     public Integer getId() {
         return id;
     }
