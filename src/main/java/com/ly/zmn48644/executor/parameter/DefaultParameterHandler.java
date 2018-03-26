@@ -20,8 +20,7 @@ public class DefaultParameterHandler implements ParameterHandler {
 
     @Override
     public Object getParameterObject() {
-
-        return null;
+        return parameter;
     }
 
     @Override

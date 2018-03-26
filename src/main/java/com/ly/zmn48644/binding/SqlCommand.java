@@ -7,6 +7,7 @@ import com.ly.zmn48644.session.Configuration;
 import java.lang.reflect.Method;
 
 public class SqlCommand {
+
     private String name;
     private SqlCommandType type;
 

@@ -1,6 +1,8 @@
 package com.ly.zmn48644.binding;
 
+import com.ly.zmn48644.reflection.ParamNameResolver;
 import com.ly.zmn48644.reflection.TypeParameterResolver;
+import com.ly.zmn48644.session.Configuration;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -19,14 +21,21 @@ public class MethodSignature {
     //返回值的类型
     private final Class<?> returnType;
 
+    private final ParamNameResolver paramNameResolver;
+
+
+    public Object convertArgsToSqlCommandParam(Object[] args) {
+        return paramNameResolver.getNamedParams(args);
+    }
 
     /**
      * 构造方法中传入的 class 和 method 初始化成员属性
      *
+     * @param configuration
      * @param mapperInterface
      * @param method
      */
-    public MethodSignature(Class<?> mapperInterface, Method method) {
+    public MethodSignature(Configuration configuration, Class<?> mapperInterface, Method method) {
 
         //通过反射工具获取到接口中方法的返回值类型
         Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, mapperInterface);
@@ -47,6 +56,7 @@ public class MethodSignature {
         //TODO 这里判断是否是集合的方法 没有抽取到 objectFactory 中 以后如果多个地方使用到 再进行抽取.
         this.returnsMany = this.returnType.isArray() || Collection.class.isAssignableFrom(this.returnType);
 
+        this.paramNameResolver = new ParamNameResolver(configuration,method);
     }
 
     public boolean isReturnsVoid() {

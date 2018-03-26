@@ -42,6 +42,6 @@ public class MapperProxy implements InvocationHandler {
             //创建后放入到缓存中
             methodCache.put(method, mapperMethod);
         }
-        return mapperMethod.execute(sqlSession);
+        return mapperMethod.execute(sqlSession,args);
     }
 }

@@ -11,9 +11,11 @@ public interface SqlSession {
 
     <T> T selectOne(String statement);
 
+    <T> T selectOne(String statement, Object parameter);
+
     <K, V> Map<K, V> selectMap(String statement, String mapKey);
 
-    <E> List<E> selectList(String statement);
+    <E> List<E> selectList(String statement,Object parameter);
 
     <T> T getMapper(Class<T> type);
 

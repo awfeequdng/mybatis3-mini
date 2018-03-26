@@ -53,6 +53,9 @@ public class Configuration {
     //是否是用类别名配置
     protected boolean useColumnLabel = true;
 
+    //是否使用真实参数名
+    protected boolean useActualParamName = true;
+
     //是否启用下划线转驼峰配置
     protected boolean mapUnderscoreToCamelCase;
 
@@ -188,6 +191,10 @@ public class Configuration {
     public ResultSetHandler newResultSetHandler(MappedStatement ms, BoundSql boundSql, ParameterHandler parameterHandler) {
         ResultSetHandler resultSetHandler = new DefaultResultSetHandler(ms, boundSql, parameterHandler);
         return resultSetHandler;
+    }
+
+    public boolean isUseActualParamName() {
+        return useActualParamName;
     }
 }
 

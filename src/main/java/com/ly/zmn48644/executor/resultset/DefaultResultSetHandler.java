@@ -60,24 +60,27 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         }
     }
 
-    private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap) {
+    private Object getRowValue(ResultSetWrapper rsw, ResultMap resultMap) throws SQLException {
         //创建一个resultType指定的对象
         Object rowValue = createResultObject(resultMap);
-
         final MetaObject metaObject = configuration.newMetaObject(rowValue);
         applyAutomaticMappings(rsw, rowValue, metaObject);
         return rowValue;
     }
 
     /**
-     * 自动映射
+     * 简单对象的自动自动映射
      *
      * @param rowValue
      * @param metaObject
      */
-    private void applyAutomaticMappings(ResultSetWrapper rsw, Object rowValue, MetaObject metaObject) {
+    private void applyAutomaticMappings(ResultSetWrapper rsw, Object rowValue, MetaObject metaObject) throws SQLException {
         List<UnMappedColumnAutoMapping> autoMappings = createAutomaticMappings(rsw, rowValue, metaObject);
-
+        for (UnMappedColumnAutoMapping mapping : autoMappings) {
+            //转换jdbc类型为java类型.
+            final Object value = mapping.getTypeHandler().getResult(rsw.getResultSet(), mapping.getColumn());
+            metaObject.setValue(mapping.getProperty(), value);
+        }
     }
 
     /**

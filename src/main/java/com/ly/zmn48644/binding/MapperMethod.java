@@ -18,10 +18,10 @@ public class MapperMethod {
     public MapperMethod(Configuration configuration, Class<?> mapperInterface, Method method) {
         //这里初始化当前对象的 SqlCommand 属性
         this.sqlCommand = new SqlCommand(configuration, mapperInterface, method);
-        this.method = new MethodSignature(mapperInterface, method);
+        this.method = new MethodSignature(configuration,mapperInterface, method);
     }
 
-    public Object execute(SqlSession sqlSession) {
+    public Object execute(SqlSession sqlSession,Object[] args) {
 
         Object result;
         //在这里调用SqlSession中相对应的方法比如update,delete,select等方法.
@@ -35,7 +35,8 @@ public class MapperMethod {
                     result = executeForMany(sqlSession);
                 } else {
                     //返回单个元素情况下
-                    result = sqlSession.selectOne(sqlCommand.getName());
+                    Object param = method.convertArgsToSqlCommandParam(args);
+                    result = sqlSession.selectOne(sqlCommand.getName(),param);
                 }
                 break;
             }

@@ -26,8 +26,13 @@ public class DefaultSqlSession implements SqlSession {
 
     @Override
     public <T> T selectOne(String statement) {
+        return selectOne(statement,null);
+    }
+
+    @Override
+    public <T> T selectOne(String statement, Object parameter) {
         //调用 selectList 方法
-        List<T> list = this.selectList(statement);
+        List<T> list = this.selectList(statement,parameter);
         if (list.size() == 1) {
             return list.get(0);
         } else if (list.size() > 1) {
@@ -42,11 +47,11 @@ public class DefaultSqlSession implements SqlSession {
     }
 
     @Override
-    public <E> List<E> selectList(String statement) {
+    public <E> List<E> selectList(String statement, Object parameter) {
         MappedStatement ms = configuration.getMappedStatement(statement);
         try {
             //调用执行器完成查询操作
-            return executor.query(ms, null);
+            return executor.query(ms, parameter);
         } catch (SQLException e) {
             throw new RuntimeException("执行数据库查询异常!");
         }
