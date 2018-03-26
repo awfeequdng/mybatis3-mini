@@ -1,6 +1,5 @@
 package com.ly.zmn48644.executor.resultset;
 
-import com.ly.zmn48644.mapping.ResultMap;
 import com.ly.zmn48644.session.Configuration;
 import com.ly.zmn48644.type.JdbcType;
 import com.ly.zmn48644.type.TypeHandler;
@@ -89,8 +88,8 @@ public class ResultSetWrapper {
         }
         //如果缓存中没有
         if (handler == null) {
-            JdbcType jdbcType = getJdbcType(columnName);
-            handler = typeHandlerRegistry.getTypeHandler(propertyType, jdbcType);
+            //JdbcType jdbcType = getJdbcType(columnName);
+            handler = typeHandlerRegistry.getTypeHandler(propertyType);
             columnHandlers.put(propertyType, handler);
         }
         return handler;

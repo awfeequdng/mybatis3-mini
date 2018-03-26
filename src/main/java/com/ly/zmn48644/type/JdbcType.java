@@ -50,7 +50,15 @@ public enum JdbcType {
     SQLXML(Types.SQLXML), // JDK6
     DATETIMEOFFSET(-155); // SQL Server 2008
 
+
+    /**
+     * JDBC类型在java.sql.Types中相应的常量编码
+     */
     public final int TYPE_CODE;
+
+    /**
+     * 维护常量编码和 JavaType 的映射关系。
+     */
     private static Map<Integer, JdbcType> codeLookup = new HashMap<Integer, JdbcType>();
 
     static {

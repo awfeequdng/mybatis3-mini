@@ -10,7 +10,15 @@ import java.sql.SQLException;
  */
 public interface TypeHandler<T> {
 
-    void setParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException;
+    /**
+     *
+     * @param ps
+     * @param index
+     * @param parameter
+     * @param jdbcType
+     * @throws SQLException
+     */
+    void setParameter(PreparedStatement ps, int index, T parameter, JdbcType jdbcType) throws SQLException;
 
     T getResult(ResultSet rs, String columnName) throws SQLException;
 
